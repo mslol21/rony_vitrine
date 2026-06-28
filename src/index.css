@@ -1,0 +1,251 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-canvas text-brand-dark font-sans antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  ::selection {
+    @apply bg-brand-sand text-stone-800;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-stone-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stone-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-stone-400;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  img {
+    @apply max-w-full;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+           bg-[#4A0D1B] text-[#FAF8F5] font-sans text-sm font-medium tracking-wide
+           rounded-full transition-all duration-300
+           hover:bg-[#3B0511] hover:shadow-medium active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+           bg-transparent text-[#4A0D1B] font-sans text-sm font-medium tracking-wide
+           border border-[#4A0D1B] rounded-full transition-all duration-300
+           hover:bg-[#4A0D1B] hover:text-[#FAF8F5] hover:border-[#4A0D1B] active:scale-[0.98];
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+           bg-brand-gold text-white font-sans text-sm font-medium tracking-wide
+           rounded-full transition-all duration-300
+           hover:bg-brand-mocha hover:shadow-medium active:scale-[0.98];
+  }
+
+  .btn-whatsapp {
+    @apply inline-flex items-center justify-center gap-2.5 px-8 py-4
+           bg-[#25D366] text-white font-sans text-sm font-semibold tracking-wide
+           rounded-full transition-all duration-300
+           hover:bg-[#1da851] hover:shadow-large active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+           text-stone-600 font-sans text-sm font-medium
+           rounded-full transition-all duration-200
+           hover:bg-stone-100 hover:text-stone-800;
+  }
+
+  /* Cards */
+  .product-card {
+    @apply bg-white rounded-2xl overflow-hidden shadow-card
+           transition-all duration-500
+           hover:shadow-card-hover hover:-translate-y-1;
+  }
+
+  .card-base {
+    @apply bg-white rounded-2xl overflow-hidden shadow-soft;
+  }
+
+  /* Inputs */
+  .input-base {
+    @apply w-full px-4 py-3 bg-white border border-stone-200 rounded-xl
+           text-stone-800 text-sm placeholder:text-stone-400
+           focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold
+           transition-all duration-200;
+  }
+
+  .label-base {
+    @apply block text-xs font-semibold text-stone-500 uppercase tracking-widest mb-2;
+  }
+
+  /* Section headers */
+  .section-eyebrow {
+    @apply text-xs font-semibold text-brand-mocha uppercase tracking-[0.2em];
+  }
+
+  .section-title {
+    @apply font-serif text-heading-xl text-stone-800 leading-tight;
+  }
+
+  .section-subtitle {
+    @apply text-stone-500 text-base leading-relaxed max-w-xl;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-new {
+    @apply badge bg-amber-100 text-amber-800;
+  }
+
+  .badge-featured {
+    @apply badge bg-stone-800 text-white;
+  }
+
+  .badge-custom {
+    @apply badge bg-brand-sand text-brand-espresso;
+  }
+
+  .badge-order {
+    @apply badge bg-stone-100 text-stone-600;
+  }
+
+  /* Dividers */
+  .divider {
+    @apply w-12 h-0.5 bg-brand-gold;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply text-sm font-medium text-stone-600 hover:text-stone-800
+           transition-colors duration-200 relative
+           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5
+           after:bg-brand-gold after:transition-all after:duration-300
+           hover:after:w-full;
+  }
+
+  /* Container */
+  .container-custom {
+    @apply max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/60;
+  }
+
+  /* Price */
+  .price-tag {
+    @apply font-serif text-lg font-medium text-stone-800;
+  }
+
+  .price-from {
+    @apply font-sans text-sm text-stone-400 line-through;
+  }
+
+  /* Image containers */
+  .img-hover {
+    @apply overflow-hidden;
+  }
+
+  .img-hover img {
+    @apply transition-transform duration-700 ease-out;
+  }
+
+  .img-hover:hover img {
+    @apply scale-105;
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply animate-pulse bg-stone-200 rounded;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .masonry-grid {
+    columns: 2;
+    column-gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .masonry-grid {
+      columns: 3;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      columns: 4;
+    }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.25s ease-out forwards;
+  }
+}
