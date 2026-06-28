@@ -26,6 +26,16 @@ export function ProductDetailPage() {
   const [currentImage, setCurrentImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [customizations, setCustomizations] = useState<CustomizationData>({});
+  
+  const [optionLabels] = useState(() => {
+    const saved = localStorage.getItem('roony_option_labels');
+    return saved ? JSON.parse(saved) : {
+      color: 'Tom/Cor',
+      fabric: 'Tipo de Pele / Cabelo',
+      finish: 'Volume / Dosagem',
+      size: 'Apresentação',
+    };
+  });
 
   const { addItem } = useCartStore();
   const { toggle, isFavorite } = useFavoritesStore();
@@ -519,18 +529,6 @@ export function ProductDetailPage() {
                     </div>
                   )}
 
-                  {/* Name */}
-                  <div>
-                    <label className="label-base" htmlFor="custom-name">Gravação de nome (opcional)</label>
-                    <input
-                      id="custom-name"
-                      type="text"
-                      placeholder="Ex: Família Macêdo"
-                      value={customizations.nome || ''}
-                      onChange={(e) => setCustomizations((c) => ({ ...c, nome: e.target.value }))}
-                      className="input-base"
-                    />
-                  </div>
 
                   {/* Notes */}
                   <div>

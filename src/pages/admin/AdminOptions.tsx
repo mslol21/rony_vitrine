@@ -1,21 +1,37 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Palette, Layers, Maximize, Sparkles, Loader2, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Palette, Layers, Maximize, Sparkles, Loader2, X, Settings } from 'lucide-react';
 import { dbService } from '../../lib/dbService';
 import type { GlobalOption, GlobalOptionType, GlobalOptionFormData } from '../../types';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
 
-const typeConfig: Record<GlobalOptionType, { label: string; icon: typeof Palette; color: string }> = {
-  color: { label: 'Cores', icon: Palette, color: 'bg-pink-50 text-pink-600' },
-  fabric: { label: 'Tecidos', icon: Layers, color: 'bg-blue-50 text-blue-600' },
-  finish: { label: 'Acabamentos', icon: Sparkles, color: 'bg-amber-50 text-amber-600' },
-  size: { label: 'Tamanhos', icon: Maximize, color: 'bg-green-50 text-green-600' },
+const DEFAULT_LABELS = {
+  color: 'Cores / Tons',
+  fabric: 'Pele / Cabelo',
+  finish: 'Volume / Dosagem',
+  size: 'Apresentação',
 };
 
 export function AdminOptions() {
   const [activeTab, setActiveTab] = useState<GlobalOptionType>('color');
   const [options, setOptions] = useState<GlobalOption[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Custom Category Labels State
+  const [customLabels, setCustomLabels] = useState(() => {
+    const saved = localStorage.getItem('roony_option_labels');
+    return saved ? JSON.parse(saved) : DEFAULT_LABELS;
+  });
+
+  const [isLabelsModalOpen, setIsLabelsModalOpen] = useState(false);
+  const [labelForm, setLabelForm] = useState(customLabels);
+
+  const typeConfig = {
+    color: { label: customLabels.color, icon: Palette, color: 'bg-pink-50 text-pink-600' },
+    fabric: { label: customLabels.fabric, icon: Layers, color: 'bg-blue-50 text-blue-600' },
+    finish: { label: customLabels.finish, icon: Sparkles, color: 'bg-amber-50 text-amber-600' },
+    size: { label: customLabels.size, icon: Maximize, color: 'bg-green-50 text-green-600' },
+  };
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,14 +145,26 @@ export function AdminOptions() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl text-stone-800">Opções Globais</h1>
-          <p className="text-stone-500 font-sans text-sm mt-1">Biblioteca de cores, tecidos, acabamentos e tamanhos</p>
+          <p className="text-stone-500 font-sans text-sm mt-1">Biblioteca de personalizações e especificações dos produtos</p>
         </div>
-        <button className="btn-primary" onClick={openCreateModal}>
-          <Plus size={16} /> Nova Opção
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setLabelForm(customLabels);
+              setIsLabelsModalOpen(true);
+            }}
+            className="btn-secondary py-2.5 px-4 text-xs flex items-center gap-1.5 font-sans"
+            title="Editar nomes das abas de categorias"
+          >
+            <Settings size={14} /> Editar Categorias
+          </button>
+          <button className="btn-primary" onClick={openCreateModal}>
+            <Plus size={16} /> Nova Opção
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -261,10 +289,10 @@ export function AdminOptions() {
                   onChange={e => setFormData(prev => ({ ...prev, type: e.target.value as GlobalOptionType }))}
                   className="input-base cursor-pointer"
                 >
-                  <option value="color">Cor</option>
-                  <option value="fabric">Tecido</option>
-                  <option value="finish">Acabamento</option>
-                  <option value="size">Tamanho</option>
+                  <option value="color">{customLabels.color}</option>
+                  <option value="fabric">{customLabels.fabric}</option>
+                  <option value="finish">{customLabels.finish}</option>
+                  <option value="size">{customLabels.size}</option>
                 </select>
               </div>
 
@@ -366,6 +394,99 @@ export function AdminOptions() {
                 >
                   {submitting && <Loader2 className="animate-spin" size={14} />}
                   {editingOption ? 'Salvar Alterações' : 'Criar Opção'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal - Edit Category Labels */}
+      {isLabelsModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsLabelsModalOpen(false)} />
+          <div className="relative bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-large z-10 animate-scale-in">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-serif text-2xl text-stone-800">
+                Editar Nomes das Categorias
+              </h2>
+              <button onClick={() => setIsLabelsModalOpen(false)} className="p-2 rounded-full hover:bg-stone-100 transition-colors">
+                <X size={20} className="text-stone-500" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                localStorage.setItem('roony_option_labels', JSON.stringify(labelForm));
+                setCustomLabels(labelForm);
+                setIsLabelsModalOpen(false);
+                toast.success('Nomes das categorias atualizados com sucesso! Recomenda-se atualizar a página.');
+                window.location.reload(); // Hard reload to sync config tabs
+              }} 
+              className="space-y-5"
+            >
+              <div>
+                <label className="label-base">Nome da Categoria 'Cor' (color) *</label>
+                <input
+                  type="text"
+                  required
+                  value={labelForm.color}
+                  onChange={e => setLabelForm(prev => ({ ...prev, color: e.target.value }))}
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="label-base">Nome da Categoria 'Tecido' (fabric) *</label>
+                <input
+                  type="text"
+                  required
+                  value={labelForm.fabric}
+                  onChange={e => setLabelForm(prev => ({ ...prev, fabric: e.target.value }))}
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="label-base">Nome da Categoria 'Acabamento' (finish) *</label>
+                <input
+                  type="text"
+                  required
+                  value={labelForm.finish}
+                  onChange={e => setLabelForm(prev => ({ ...prev, finish: e.target.value }))}
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="label-base">Nome da Categoria 'Tamanho' (size) *</label>
+                <input
+                  type="text"
+                  required
+                  value={labelForm.size}
+                  onChange={e => setLabelForm(prev => ({ ...prev, size: e.target.value }))}
+                  className="input-base"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 border-t border-stone-100 pt-5">
+                <button
+                  type="button"
+                  onClick={() => setIsLabelsModalOpen(false)}
+                  className="btn-secondary py-2.5"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="btn-primary py-2.5"
+                >
+                  Salvar Categorias
                 </button>
               </div>
             </form>
