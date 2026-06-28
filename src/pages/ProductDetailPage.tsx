@@ -421,7 +421,7 @@ export function ProductDetailPage() {
                   {colorOptions.length > 0 && (
                     <div>
                       <label className="label-base">
-                        Tom/Cor {customizations.cor && <span className="normal-case font-normal text-stone-500">— {customizations.cor}</span>}
+                        {optionLabels.color} {customizations.cor && <span className="normal-case font-normal text-stone-500">— {customizations.cor}</span>}
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {colorOptions.map((opt) => (
@@ -448,7 +448,7 @@ export function ProductDetailPage() {
                   {/* Fabrics */}
                   {fabricOptions.length > 0 && (
                     <div>
-                      <label className="label-base">Tipo de Pele / Cabelo</label>
+                      <label className="label-base">{optionLabels.fabric}</label>
                       <div className="flex flex-wrap gap-2">
                         {fabricOptions.map((opt) => (
                           <button
@@ -477,7 +477,7 @@ export function ProductDetailPage() {
                   {/* Finishes */}
                   {finishOptions.length > 0 && (
                     <div>
-                      <label className="label-base">Volume / Dosagem</label>
+                      <label className="label-base">{optionLabels.finish}</label>
                       <div className="flex flex-wrap gap-2">
                         {finishOptions.map((opt) => (
                           <button
@@ -506,7 +506,7 @@ export function ProductDetailPage() {
                   {/* Sizes */}
                   {sizeOptions.length > 0 && (
                     <div>
-                      <label className="label-base">Apresentação</label>
+                      <label className="label-base">{optionLabels.size}</label>
                       <div className="flex flex-wrap gap-2">
                         {sizeOptions.map((opt) => (
                           <button

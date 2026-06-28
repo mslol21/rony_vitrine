@@ -5,7 +5,14 @@ import type { GlobalOption, GlobalOptionType, GlobalOptionFormData } from '../..
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
 
-const DEFAULT_LABELS = {
+interface OptionLabels {
+  color: string;
+  fabric: string;
+  finish: string;
+  size: string;
+}
+
+const DEFAULT_LABELS: OptionLabels = {
   color: 'Cores / Tons',
   fabric: 'Pele / Cabelo',
   finish: 'Volume / Dosagem',
@@ -18,13 +25,13 @@ export function AdminOptions() {
   const [loading, setLoading] = useState(true);
 
   // Custom Category Labels State
-  const [customLabels, setCustomLabels] = useState(() => {
+  const [customLabels, setCustomLabels] = useState<OptionLabels>(() => {
     const saved = localStorage.getItem('roony_option_labels');
-    return saved ? JSON.parse(saved) : DEFAULT_LABELS;
+    return saved ? (JSON.parse(saved) as OptionLabels) : DEFAULT_LABELS;
   });
 
   const [isLabelsModalOpen, setIsLabelsModalOpen] = useState(false);
-  const [labelForm, setLabelForm] = useState(customLabels);
+  const [labelForm, setLabelForm] = useState<OptionLabels>(customLabels);
 
   const typeConfig = {
     color: { label: customLabels.color, icon: Palette, color: 'bg-pink-50 text-pink-600' },
