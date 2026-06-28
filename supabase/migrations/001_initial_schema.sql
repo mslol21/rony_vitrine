@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- TENANTS (Multi-empresa)
 -- ============================================================
 CREATE TABLE IF NOT EXISTS tenants (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   whatsapp TEXT NOT NULL,
@@ -32,7 +32,7 @@ INSERT INTO tenants (name, slug, whatsapp, settings) VALUES (
 -- CATEGORIES
 -- ============================================================
 CREATE TABLE IF NOT EXISTS categories (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   slug TEXT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS categories (
 -- GLOBAL OPTIONS (Colors, Fabrics, Finishes, Sizes)
 -- ============================================================
 CREATE TABLE IF NOT EXISTS global_options (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   type TEXT NOT NULL CHECK (type IN ('color', 'fabric', 'finish', 'size')),
   name TEXT NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS global_options (
 -- PRODUCTS
 -- ============================================================
 CREATE TABLE IF NOT EXISTS products (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
@@ -101,7 +101,7 @@ CREATE TRIGGER products_updated_at
 -- PRODUCT OPTIONS (which global options a product accepts)
 -- ============================================================
 CREATE TABLE IF NOT EXISTS product_options (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID REFERENCES products(id) ON DELETE CASCADE,
   global_option_id UUID REFERENCES global_options(id) ON DELETE CASCADE,
   price_modifier DECIMAL(10,2) DEFAULT 0,
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS product_options (
 -- INSPIRATIONS
 -- ============================================================
 CREATE TABLE IF NOT EXISTS inspirations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   description TEXT,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS inspirations (
 -- ORDERS
 -- ============================================================
 CREATE TABLE IF NOT EXISTS orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   customer_name TEXT,
   customer_whatsapp TEXT,
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS orders (
 -- ORDER ITEMS
 -- ============================================================
 CREATE TABLE IF NOT EXISTS order_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
   product_id UUID REFERENCES products(id) ON DELETE SET NULL,
   product_name TEXT NOT NULL,
